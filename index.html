@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Next Word Prediction mit LSTM</title>
+
+  <!-- Material Design Web -->
+  <!-- HEAD: Materialize CSS einbinden -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+
+
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0/dist/tf.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body class="mdc-typography">
+
+<!--  Material Top App Bar -->
+<header class="mdc-top-app-bar">
+  <div class="mdc-top-app-bar__row">
+    <!-- Titel -->
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+      <span class="mdc-top-app-bar__title">Next Word Prediction</span>
+    </section>
+
+    <!-- Navigation -->
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+      <nav class="app-bar-navigation">
+        <a href="#card1" class="nav-link">Model</a>
+        <a href="#card2" class="nav-link">Diskussion</a>
+        <a href="#card3" class="nav-link">Dokumentation</a>
+        <a href="#card4" class="nav-link">Quellen</a>
+      </nav>
+    </section>
+  </div>
+</header>
+
+<!--  Hauptinhalt -->
+<div class="container" id="card1">
+
+  <h2>Text-Eingabe</h2>
+
+  <!-- Prompt -->
+  <label for="inputText">Eingabetext:</label>
+  <textarea id="inputText" rows="4" style="width: 100%;"></textarea>
+
+  <!-- Buttons -->
+  <div class="button-group">
+    <button id="predictBtn" class="button-filled">Vorhersage</button>
+    <button id="nextBtn" class="button-filled">Weiter</button>
+    <button id="autoBtn" class="button-filled">Auto</button>
+    <button id="stopBtn" class="button-filled">Stopp</button>
+    <button id="resetBtn" class="button-outlined">Reset</button>
+    <button id="evaluateBtn" class="button-filled">Evaluate Model</button>
+  </div>
+
+  <!-- Ausgabe -->
+  <div id="predictionOutput" class="output" style="margin-top: 1em;">
+    Nächste Wortvorhersage erscheint hier...
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-wrapper">
+      <h3>Top-5 Vorhersage-Wahrscheinlichkeiten</h3>
+      <canvas id="predictionChart"></canvas>
+    </div>
+    <div class="chart-wrapper">
+      <h3>Top-k Accuracy</h3>
+      <canvas id="accuracyChart"></canvas>
+    </div>
+  </div>
+
+
+<!-- Diskussion -->
+<section id="card-diskussion" class="mdc-layout-grid discussion-section">
+  <div id="card2" class="mdc-layout-grid__inner">
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+      <div class="mdc-card discussion-card">
+        <div class="mdc-card__content">
+          <h2 class="mdc-typography--headline6">Diskussion</h2>
+          <p class="mdc-typography--body1">
+            Im Projekt wurde deutlich, dass die Nutzung eines Servers zur Verarbeitung und Vorverarbeitung der Textdaten sehr sinnvoll gewesen wäre, um Performance und Skalierbarkeit zu verbessern. Die Behandlung von Textdaten ist komplex und umfasst viele Aspekte wie das Erstellen eines geeigneten Wörterbuchs, das Bereinigen des Texts von Sonderzeichen, Groß-/Kleinschreibung und Stoppwörtern sowie das Handling von Mehrdeutigkeiten, Sampling etc. Im Browser-Training sind technische Limitationen wie GPU-Auslastung und WebGL-Beschränkungen zu beachten, was die Größe der Trainingsdaten begrenzt. Ein serverseitiges Training hätte diese Einschränkungen reduzieren können. Zudem zeigte sich, dass eine sorgfältige Datenvorbereitung die Modellqualität deutlich verbessert. Wichtig ist, dass solche Projekte von Anfang an gut durchdacht sein müssen – gerade die Strukturierung der Datenvorbereitung und die gesamte Pipeline erfordern viel Planung und Erfahrung. Rückblickend hätte mir mehr Erfahrung im Umgang mit NLP-Projekten sehr geholfen, um typische Fallstricke frühzeitig zu erkennen und zu umgehen. Der gesamte Prozess war ein großer Lernschritt, bei dem ich mich intensiv mit Problemlösungen und der komplexen Struktur von Datenaufbereitung auseinandersetzen musste. Insgesamt verdeutlicht das Projekt, dass einfache Implementierungen schnell an ihre Grenzen stoßen, wenn größere Datensätze oder komplexere Modelle ins Spiel kommen.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Dokumentation -->
+<section id="card-dokumentation" class="mdc-layout-grid documentation-section">
+  <div id="card3" class="mdc-layout-grid__inner">
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+      <div class="mdc-card documentation-card">
+        <div class="mdc-card__content">
+          <h2 class="mdc-typography--headline6">
+            Dokumentation
+          </h2>
+
+          <!-- Technischer Abschnitt -->
+          <h3 class="mdc-typography--subtitle1">Technik</h3>
+          <p class="mdc-typography--body1">
+            Diese Anwendung setzt folgende Frameworks und Tools ein:
+          </p>
+          <ul>
+            <li><strong>TensorFlow.js</strong><br>
+              Wird zur Erstellung, zum Training und zur Auswertung eines Feedforward-Neural-Networks direkt im Browser verwendet. Die Bibliothek ermöglicht maschinelles Lernen mit JavaScript, ohne Backend oder Server-Anbindung.
+            </li>
+            <li><strong>Chart.js</strong><br>
+              Eine leichtgewichtige JavaScript-Bibliothek zur Visualisierung von Daten mit interaktiven Diagrammen, unter anderem zurDarstellung von Top-k-Accuracy und Perplexity.
+            </li>
+            <li><strong>Material Components Web (Material IO)</strong><br>
+              Wird zur Gestaltung des Layouts und der Benutzeroberfläche verwendet. Buttons, Navigation und Layout-Komponenten folgen den Material-Design-Richtlinien, um eine moderne, klare UI zu ermöglichen.
+            </li>
+          </ul>
+
+          <h3 class="mdc-typography--subtitle1">Technische Besonderheiten</h3>
+          <p class="mdc-typography--body1">
+          <ul>
+            <li><strong>TensorFlow.js</strong><br>
+              Wird zur Erstellung, zum Training und zur Inferenz eines LSTM-basierten Sprachmodells vollständig im Browser verwendet. Die Bibliothek ermöglicht es, neuronale Netze mit JavaScript zu definieren, zu trainieren und auszuführen, ohne Backend oder Server-Anbindung. Die Modellarchitektur besteht aus zwei LSTM-Schichten mit jeweils 100 Einheiten sowie einem dichten Softmax-Ausgang zur Wahrscheinlichkeitsverteilung über das Vokabular.
+            </li>
+            <li><strong>Chart.js</strong><br>
+              Eine leichtgewichtige JavaScript-Bibliothek zur Darstellung interaktiver Diagramme. In diesem Projekt wird sie für zwei Ausgaben eingesetzt:
+              <ul>
+                <li>ein Balken- und Liniendiagramm zur Visualisierung der Top-k-Accuracy (k = 1, 5, 10, 20, 100) sowie der Perplexity,</li>
+                <li>sowie ein separates Balkendiagramm zur Darstellung der Wahrscheinlichkeiten bei einzelnen Wortvorhersagen.</li>
+              </ul>
+            </li>
+            <li><strong>Material Components Web (Material IO)</strong><br>
+              Die Benutzeroberfläche basiert auf den Material-Design-Richtlinien. Buttons, Textfelder und Layouts sind modern und konsistent gestaltet. Die Interaktion erfolgt über dedizierte Buttons, u. a.:
+              <ul>
+                <li><code>Vorhersagen</code>: Erzeugt aus dem eingegebenen Text die wahrscheinlichsten nächsten Wörter.</li>
+                <li><code>Weiter</code> und <code>Auto</code>: Generieren automatisch Folgewörter, einzeln oder als Sequenz.</li>
+                <li><code>Reset</code>: Setzt Eingabe und Ausgabe zurück.</li>
+              </ul>
+            </li>
+            <li><strong>Evaluate-Model-Button</strong><br>
+              Mit einem eigenen Button <code>Evaluate Model</code> wird eine systematische Auswertung des trainierten Modells auf einem separaten Testsatz durchgeführt. Dabei werden automatisch die Top-k-Accuracy für verschiedene k-Werte (1, 5, 10, 20, 100) sowie die durchschnittliche Perplexity berechnet und in einem kombinierten Balken-/Liniendiagramm dargestellt. Die Funktion <code>evaluateModel()</code> steuert diesen Ablauf programmatisch.
+            </li>
+            <li><strong>Rein clientseitige Architektur</strong><br>
+              Das gesamte Projekt läuft ausschließlich im Browser – inklusive Training, Inferenz, Visualisierung und UI. Diese rein frontendbasierte Lösung verzichtet bewusst auf Backend, Datenbank oder Server. Daraus ergeben sich jedoch Einschränkungen hinsichtlich Performance und Speicher. Auf diese Limitationen wird im Abschnitt „Implementierung der Logik“ gesondert eingegangen.
+            </li>
+          </ul>
+
+
+          <!-- Fachlicher Abschnitt -->
+          <h3 class="mdc-typography--subtitle1">Fachlich</h3>
+          <p class="mdc-typography--body1">
+            <strong>Implementierung der Logik</strong>
+          </p>
+          Die Umsetzung des LSTM-Sprachmodells erfolgte vollständig im Browser mithilfe von TensorFlow.js. Ziel war es, ein funktionales Wortvorhersagesystem zu entwickeln, das ohne Backend auskommt und direkt im Frontend trainiert und ausgewertet werden kann. Dieses Setup wurde gewählt, um die gesamte Pipeline (Modellarchitektur, Training, Inferenz, Visualisierung) transparent, flexibel und unabhängig vom Server umzusetzen.
+          Zum Start der Entwicklung wurde bewusst mit einem stark reduzierten Trainingsdatensatz von rund 300 Wörtern gearbeitet. Dies diente zunächst der Sicherstellung der Funktionalität und Stabilität der Komponenten – insbesondere beim Aufbau der Trainingslogik, der Worttokenisierung sowie der UI-Interaktionen für Vorhersage und Visualisierung.
+          Erst zu einem späteren Zeitpunkt, nach erfolgreichem Aufbau und Test aller zentralen Funktionen,  wurde der Umfang der Trainingsdaten sukzessive erweitert. Dabei stellte sich jedoch heraus, dass eine rein browserbasierte Lösung bei größeren Datenmengen  an technische Grenzen stößt: Die GPU-Auslastung stieg stark an, und es kam zu WebGL-bezogenen Fehlern wie „Requested texture size [...] greater than WebGL maximum“. Diese Limitierungen wurden zunächst unterschätzt und führten zu Performanceproblemen, die im späteren Verlauf dokumentiert und analysiert wurden.
+          Trotz dieser Einschränkungen konnte die wesentliche Logik des Projekts innerhalb des Frontends umgesetzt werden – inklusive Training, Testdatengenerierung, Top-k-Vorhersagen, Perplexity-Berechnung und interaktiver Auswertungen. Da aufgrund der technischen Einschränkungen nur mit stark verkleinerten Datensätzen trainiert werden konnte, sind die erzielten Ergebnisse begrenzt aussagekräftig und deuten auf ein Modell hin, das auf unzureichender Datenbasis trainiert wurde – was sich sowohl in der Qualität der Vorhersagen als auch in der insgesamt langsamen Trainingsgeschwindigkeit widerspiegelt.
+          <br><br>
+          Zur Architektur: Im ursprünglichen Modell wurden die Eingabewörter mithilfe von One-Hot-Encoding dargestellt. Dabei wird jedes Wort durch einen sehr langen Vektor kodiert, in dem exakt eine Position den Wert 1 hat und alle anderen 0. Diese Darstellung ist zwar eindeutig, aber extrem ineffizient: Die Vektoren sind hochdimensional (entsprechend der Vokabulargröße) und enthalten keinerlei semantische Struktur. So kann das Modell keine Ähnlichkeiten zwischen Wörtern wie „Katze“ und „Hund“ erkennen, da sämtliche One-Hot-Vektoren denselben Abstand zueinander haben.
+          Zur Verbesserung dieser Darstellung wurde das Modell auf ein Embedding-Verfahren umgestellt. Jedes Wort wird nun als einfacher Index übergeben, der in einem tf.layers.embedding()-Layer verarbeitet wird. Dieser erzeugt für jedes Wort einen dichten Vektor von z.B. 32 Dimensionen, der im Laufe des Trainings lernbar ist. Dadurch entstehen semantisch sinnvollere Repräsentationen, da ähnliche Wörter in ähnliche Richtungen im Vektorraum verschoben werden können.
+          Trotz dieser technischen Verbesserung durch Embeddings konnte jedoch keine spürbare Erhöhung der Trainingsgeschwindigkeit oder der verarbeitbaren Datenmenge im Browser erreicht werden. Die Architektur basierte weiterhin auf der ursprünglichen Aufgabenstellung mit zwei LSTM-Schichten. Eine weitere Erhöhung der Modelltiefe oder -komplexität war in der gewählten Frontend-Umgebung aufgrund von Leistungsgrenzen und WebGL-Fehlern nicht praktikabel.
+          <br><br>
+          Probleme und Problembehebung: Wie schon erwähnt wurde zu Beginn des Projekts wurde das LSTM-Modell mit einem stark reduzierten Datensatz von nur etwa 300 Wörtern trainiert. Ziel war es, die grundlegende Funktionalität des Netzwerks sowie die Textgenerierung im Browser möglichst schnell und unkompliziert zu überprüfen. Das Training über zehn Epochen zeigte zwar eine stetige Abnahme des Loss-Werts (von 5.07 auf 3.81) und eine leichte Steigerung der Top-1-Genauigkeit (von 2.70 % auf 8.11 %), allerdings war bereits hier absehbar, dass das Modell nur sehr eingeschränkt lernfähig war. Die Textvorhersagen waren zwar erstaunlich vielfältig, aber auf dieser geringen Datenbasis nicht verlässlich.
+          Im weiteren Verlauf wurde der Trainingsdatensatz auf 3000 Wörter erweitert, um realistischere Experimente durchführen zu können. Wie erwartet stieg der anfängliche Verlust auf 6.20 an – ein Hinweis auf die höhere Komplexität und die gestiegene Anforderung an das Modell. Die Genauigkeit verbesserte sich jedoch nur minimal auf 6.78 %. Dies deutet auf eine abflachende Lernkurve hin, die mit der bestehenden Architektur und unveränderten Hyperparametern nicht effizient überwunden werden konnte.
+          Ein deutliches Problem trat bei der autoregessiven Textgenerierung mit dem erweiterten Datensatz auf: Sobald längere Sequenzen mit den Buttons „Auto“ oder „Weiter“ erzeugt wurden, neigte das Modell dazu, einzelne Wortpaare repetitiv zu wiederholen – etwa in der Form „vater vater vater vater“. Dieses Verhalten war im kleineren Datensatz nicht beobachtbar.
+          Mit zunehmender Datenmenge steigt die Wahrscheinlichkeit, dass das Modell auf häufig vorkommende Wortfolgen konditioniert wird. Wenn bei der Vorhersage ausschließlich das wahrscheinlichste Wort (Top-1) verwendet wird – ohne Sampling oder Temperature-Steuerung – neigt das Modell dazu, sich in Wiederholungsschleifen zu verfangen. Dieses Verhalten verstärkt sich besonders bei:
+          längeren autoregressiven Sequenzen,
+          einseitig strukturierten Trainingsdaten,
+          fehlender Sampling-Strategie.
+          <br><br>
+
+          <p>
+            Ein zentrales Problem während der Evaluation war die durchweg zu hohe Perplexity des Modells.
+            Die Perplexity ist ein Maß für die Unsicherheit des Modells bei der Vorhersage des nächsten Wortes – hohe Werte
+            deuten darauf hin, dass das Modell wenig Vertrauen in seine Vorhersagen hat und viele mögliche Ausgänge „gleich wahrscheinlich“ erscheinen.
+            In diesem Fall waren die Perplexity-Werte auch nach mehreren Trainingsdurchläufen deutlich zu hoch,
+            was bereits ein Hinweis auf strukturelle Mängel im Datensatz oder im Modell war.
+          </p>
+
+          <p>
+            Die Hauptursache lag in der geringen Menge an Trainingsdaten.
+            Selbst bei 3000 Wörtern verfügte das Netzwerk nicht über genügend Beispiele, um sinnvolle statistische Regelmäßigkeiten zwischen Wörtern zu erkennen.
+            Ein weiteres Problem bestand darin, dass einige Wörter in den Testdaten nicht im Wörterbuch (Vocabulary) enthalten waren,
+            da sie beim Preprocessing entfernt oder verändert wurden.
+            Dadurch kam es zu <em>„Unknown Token“-Effekten</em> bei der Evaluation, was die Perplexity zusätzlich verschlechterte.
+          </p>
+
+          <h4>Lösungsversuche zur Reduktion der Perplexity:</h4>
+
+          <ul>
+            <li>
+              <strong>Wörterbuch-Vollständigkeit prüfen:</strong>
+              Es wurde sichergestellt, dass alle Wörter, die in den Testdaten verwendet werden, auch im Wortindex enthalten sind.
+              So konnten unbekannte Tokens reduziert werden.
+            </li>
+            <li>
+              <strong>Sampling variabler gestalten:</strong>
+              Statt stets vom selben Punkt aus den Trainingsausschnitt zu extrahieren, wurde ein <em>zufälliger Startindex</em> gewählt.
+              Dies sorgte für mehr Vielfalt im Training, da verschiedene Bereiche des Textes berücksichtigt wurden.
+            </li>
+            <li>
+              <strong>Reihenfolge der Trainingsdaten mischen:</strong>
+              Durch eine Zufallsdurchmischung der Wortreihenfolge vor dem Sampling wurde die Lokalität im Text aufgehoben,
+              wodurch das Modell lernen konnte, flexibler mit Wortfolgen umzugehen.
+            </li>
+            <li>
+              <strong>Verbessertes Preprocessing:</strong>
+              Die Funktion <code>preprocess.js</code> wurde erweitert, um die <em>Textnormalisierung</em> zu verbessern. Konkret:
+              <ul>
+                <li>Entfernen von <strong>Stoppwörtern</strong> (z. B. „und“, „der“, „die“), die keine semantische Bedeutung für die Wortvorhersage haben.</li>
+                <li><strong>Zusammenfassen seltener Wörter</strong> unter einem gemeinsamen <code>&lt;UNK&gt;</code>-Token, um die Vokabulargröße zu kontrollieren.</li>
+                <li>Vereinheitlichung von <strong>Groß-/Kleinschreibung und Zeichensetzung</strong>.</li>
+              </ul>
+            </li>
+          </ul>
+
+          <p>
+            Diese Maßnahmen führten zu einer leichten Verbesserung der Perplexity-Werte
+            und sorgten dafür, dass das Modell stabilere Wortfolgen erzeugen konnte.
+            Dennoch blieb die grundsätzliche Limitation durch die zu kleine Datenbasis im Browser bestehen:
+            Für ein sinnvolles Sprachmodell sind deutlich größere Korpora notwendig,
+            als sie in dieser Umgebung praktikabel trainiert werden können.
+          </p>
+          In meinem Fall lässt sich die Frage, ob sich die ursprünglichen Trainingsdaten durch das trainierte Modell rekonstruieren lassen, klar verneinen. Aufgrund der geringen Datenmenge und der limitierten Modellkapazität ist keine exakte Rückführung auf die Trainingsdaten möglich. Allgemein betrachtet ist dies jedoch ein wichtiges Thema im Kontext von Sprachmodellen: Große Language Models (LMs), die auf umfangreichen Textkorpora trainiert werden, können unter bestimmten Bedingungen tatsächlich Trainingsbeispiele oder sensible Informationen ausgeben, insbesondere wenn sie oft oder gezielt nach bestimmten Daten "gefragt" werden. Das stellt ein potenzielles Datenschutzrisiko dar – insbesondere dann, wenn personenbezogene oder vertrauliche Daten im Trainingsmaterial enthalten waren. Um dem entgegenzuwirken, ist es wichtig, bereits bei der Datensammlung auf Anonymisierung zu achten und bei der Modellentwicklung technische Maßnahmen wie Differential Privacy in Betracht zu ziehen.
+          <br><br>
+          Aus zeitlichen Gründen konnte ich das Projekt leider nicht mehr auf einen Server umstellen, was ich jedoch sehr gerne getan hätte. Insbesondere hätte ich so die Möglichkeit gehabt, ein größeres Modell mit mehr Trainingsdaten effizienter zu trainieren und die Grenzen des browserbasierten Trainings zu umgehen. Dadurch hätte ich noch besser nachvollziehen können, wie ein Language Model unter realistischeren Bedingungen lernt und performt.
+
+
+          <!-- Quellen -->
+          <h3 id="card4" class="mdc-typography--subtitle1">Quellen</h3>
+          <ul>
+            <li>
+              TensorFlow.js:
+              <a href="https://www.tensorflow.org/js" target="_blank" rel="noopener noreferrer">
+                https://www.tensorflow.org/js
+              </a>
+            </li>
+            <li>
+              Chart.js:
+              <a href="https://www.chartjs.org/" target="_blank" rel="noopener noreferrer">
+                https://www.chartjs.org/
+              </a>
+            </li>
+            <li>
+              Material Components for the Web:
+              <a href="https://github.com/material-components/material-components-web" target="_blank" rel="noopener noreferrer">
+                https://github.com/material-components/material-components-web
+              </a>
+            </li>
+            <li>
+              ChatGPT (OpenAI):
+              <a href="https://chat.openai.com/" target="_blank" rel="noopener noreferrer">
+                https://chat.openai.com/
+              </a>
+            </li>
+            <li>
+              Projekt Gutenberg (deutsche Texte):
+              <a href="https://www.gutenberg.org/" target="_blank" rel="noopener noreferrer">
+                https://www.gutenberg.org/
+              </a>
+              <br>Einige deutsche Märchentexte wurden von dort bezogen (öffentlich zugängliche Literatur).
+              Beispielhafte Verwendung: Texte als .txt-Dateien gespeichert und als Trainingsdaten genutzt.
+            </li>
+            <li>
+              10k German News Articles (Kaggle):
+              <a href="https://www.kaggle.com/datasets/abhishek/10k-german-news-articles/data" target="_blank" rel="noopener noreferrer">
+                https://www.kaggle.com/datasets/abhishek/10k-german-news-articles/data
+              </a>
+              <br>Enthält über 10.000 deutschsprachige Nachrichtenartikel. Teile davon wurden als alternative, moderne Textquelle für das Training verwendet.
+            </li>
+            <li>
+              Aufgabenstellung ESA3 mit dort hinterlegten Quellen
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script type="module" src="main.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* App Bar */
+.mdc-top-app-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    background-color: #6200ee;
+    color: white;
+    height: 70px; /* Höhe der App Bar */
+}
+
+/* Titel Styling: größer und auffälliger */
+.mdc-top-app-bar__title {
+    font-size: 20px; /* Reduzierte Schriftgröße */
+    font-weight: 400; /* Normalgewicht (dünner als "bold") */
+    margin-left: 16px; /* Abstand beibehalten */
+    line-height: 80px; /* Passt weiterhin zur App-Bar-Höhe */
+}
+
+/* Navigation Styling: kleiner als Titel */
+.app-bar-navigation {
+    display: flex;
+    align-items: center;
+    margin-right: 16px; /* Abstand vom rechten Rand */
+}
+
+.app-bar-navigation .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px; /* Kleinere Schriftgröße für Navigationstexte */
+    padding: 8px 16px;
+    transition: background-color 0.2s ease;
+    border-radius: 4px;
+}
+
+.app-bar-navigation .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.app-bar-navigation a {
+    color: white;
+    text-decoration: none;
+    margin-left: 1.5rem;
+    font-weight: 500;
+}
+
+.mdc-top-app-bar__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    height: 100%; /* Stellt sicher, dass die Inhalte den gesamten verfügbaren Platz nutzen */
+}
+.container {
+    max-width: 700px;
+    margin: 10rem auto 2rem; /* Erhöhe den oberen Abstand auf 10rem */
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+.output {
+    margin-top: 2rem;
+    font-weight: bold;
+    min-height: 2rem;
+}
+/* Stil für kleinere Buttons */
+button {
+    background-color: #6200ee; /* Hintergrundfarbe passend zur App Bar */
+    color: white; /* Textfarbe */
+    border: none; /* Kein Rand */
+    padding: 0.6rem 1rem; /* Etwas weniger Innenabstand */
+    font-size: 0.9rem; /* Etwas kleinere Schriftgröße */
+    border-radius: 4px; /* Abgerundete Ecken bleiben gleich */
+    cursor: pointer; /* Zeigt, dass der Button interaktiv ist */
+    transition: all 0.3s ease; /* Sanfter Übergang für Effekte */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1); /* Leichter Schatten, passend zur kleineren Größe */
+}
+
+/* Effekt beim Hovern (Mouseover) */
+button:hover {
+    background-color: #3700b3; /* Dunkleres Lila beim Hovern */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Größerer Schatten */
+    transform: translateY(-2px); /* Leichtes Anheben */
+}
+
+/* Effekt beim Klicken */
+button:active {
+    background-color: #03dac5; /* Farbänderung beim Klicken (Türkis) */
+    box-shadow: none; /* Schatten wird entfernt */
+    transform: translateY(1px); /* Button wird leicht vertieft */
+}
+
+/* Gruppe der Buttons */
+.button-group {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Buttons bleiben links ausgerichtet */
+}
+
+
+ #predictionChart  {
+     max-height: 400px; /* Maximalhöhe für das Diagramm */
+     margin: 0 auto;    /* Zentriert das Diagramm */
+ }
+#accuracyChart {
+    max-height: 400px; /* Maximalhöhe für das Diagramm */
+    margin: 0 auto;    /* Zentriert das Diagramm */
+}
+
+
+.chart-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start; /* Überschrift oben ausrichten */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.chart-wrapper {
+    flex: 1;
+    max-width: 45%;
+}
+
+.chart-wrapper h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    color: #333;
+    height: 2.2em; /* Feste Höhe (z.B. 2 Zeilen) */
+    line-height: 1.1em; /* Zeilenhöhe passend */
+    overflow: hidden; /* Falls Überschrift zu lang */
+}
+
+
+.chart-wrapper canvas {
+    width: 100%; /* Wächst mit dem Wrapper */
+    height: 400px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Abschnitte unterhalb des Containers */
+.discussion-section,
+.documentation-section {
+    margin: 2rem auto;
+    max-width: 800px; /* Maximale Breite */
+}
+
+/* Karten-Styling */
+.discussion-card,
+.documentation-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    background-color: white;
+}
+
+/* Abschnitt Überschriften */
+.mdc-typography--headline6 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* Fließtext Styling */
+.mdc-typography--body1 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+/* Listen-Styling */
+.documentation-section ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+.documentation-section li {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.documentation-section a {
+    color: #6200ee;
+    text-decoration: none;
+}
+
+.documentation-section a:hover {
+    text-decoration: underline;
+}
+
+    .chart-container h3 {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
